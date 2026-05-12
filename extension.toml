@@ -1,0 +1,17 @@
+id = "atfile"
+name = "Atfile"
+description = "Path reference completions after @."
+version = "0.1.0"
+schema_version = 1
+authors = ["Yiming Zhang"]
+repository = "https://github.com/inmzhang/atfile"
+capabilities = []
+
+[lib]
+kind = "Rust"
+version = "0.7.0"
+path = "crates/atfile-zed"
+
+[language_servers.atfile]
+name = "Atfile"
+languages = ["Markdown", "Plain Text", "Git Commit", "YAML", "JSON", "TOML"]

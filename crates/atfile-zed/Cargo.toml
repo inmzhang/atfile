@@ -1,0 +1,13 @@
+[package]
+name = "atfile-zed"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+zed_extension_api.workspace = true

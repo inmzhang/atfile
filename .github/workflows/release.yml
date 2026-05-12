@@ -1,0 +1,85 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.asset_platform }}
+    runs-on: ${{ matrix.runner }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            asset_platform: linux-x86_64
+            archive: tar.gz
+            binary: atfile-lsp
+          - runner: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+            asset_platform: linux-aarch64
+            archive: tar.gz
+            binary: atfile-lsp
+          - runner: macos-13
+            target: x86_64-apple-darwin
+            asset_platform: macos-x86_64
+            archive: tar.gz
+            binary: atfile-lsp
+          - runner: macos-latest
+            target: aarch64-apple-darwin
+            asset_platform: macos-aarch64
+            archive: tar.gz
+            binary: atfile-lsp
+          - runner: windows-latest
+            target: x86_64-pc-windows-msvc
+            asset_platform: windows-x86_64
+            archive: zip
+            binary: atfile-lsp.exe
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Build language server
+        run: cargo build --release -p atfile-lsp --bin atfile-lsp --target ${{ matrix.target }}
+
+      - name: Stage binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME}"
+          package_dir="atfile-lsp-${version}/${{ matrix.asset_platform }}"
+          mkdir -p "${package_dir}"
+          cp "target/${{ matrix.target }}/release/${{ matrix.binary }}" "${package_dir}/"
+
+      - name: Package Unix archive
+        if: matrix.archive == 'tar.gz'
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME}"
+          tar -czf "atfile-lsp-${version}-${{ matrix.asset_platform }}.tar.gz" "atfile-lsp-${version}"
+
+      - name: Package Windows archive
+        if: matrix.archive == 'zip'
+        shell: pwsh
+        run: |
+          $version = $env:GITHUB_REF_NAME
+          Compress-Archive -Path "atfile-lsp-$version" -DestinationPath "atfile-lsp-$version-${{ matrix.asset_platform }}.zip"
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: atfile-lsp-${{ github.ref_name }}-${{ matrix.asset_platform }}.${{ matrix.archive }}
