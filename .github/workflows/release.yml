@@ -54,8 +54,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          version="${GITHUB_REF_NAME}"
-          package_dir="atfile-lsp-${version}/${{ matrix.asset_platform }}"
+          package_dir="dist/${{ matrix.asset_platform }}"
           mkdir -p "${package_dir}"
           cp "target/${{ matrix.target }}/release/${{ matrix.binary }}" "${package_dir}/"
 
@@ -65,14 +64,14 @@ jobs:
         run: |
           set -euo pipefail
           version="${GITHUB_REF_NAME}"
-          tar -czf "atfile-lsp-${version}-${{ matrix.asset_platform }}.tar.gz" "atfile-lsp-${version}"
+          tar -czf "atfile-lsp-${version}-${{ matrix.asset_platform }}.tar.gz" -C "dist/${{ matrix.asset_platform }}" "${{ matrix.binary }}"
 
       - name: Package Windows archive
         if: matrix.archive == 'zip'
         shell: pwsh
         run: |
           $version = $env:GITHUB_REF_NAME
-          Compress-Archive -Path "atfile-lsp-$version" -DestinationPath "atfile-lsp-$version-${{ matrix.asset_platform }}.zip"
+          Compress-Archive -Path "dist/${{ matrix.asset_platform }}/${{ matrix.binary }}" -DestinationPath "atfile-lsp-$version-${{ matrix.asset_platform }}.zip"
 
       - name: Upload release asset
         uses: softprops/action-gh-release@v2

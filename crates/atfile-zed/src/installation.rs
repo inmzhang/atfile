@@ -82,11 +82,11 @@ impl Platform {
     }
 
     fn archive_path(self) -> String {
-        format!("{}/{}.{}", release_dir(), self, self.archive_kind())
+        format!("{}/{}", release_dir(), self)
     }
 
     fn binary_path(self) -> String {
-        format!("{}/{}/{}", release_dir(), self, binary_file_name(self.os))
+        format!("{}/{}", self.archive_path(), binary_file_name(self.os))
     }
 
     fn archive_kind(self) -> ArchiveKind {
@@ -262,7 +262,11 @@ mod tests {
         );
         assert_eq!(
             platform.archive_path(),
-            "atfile-lsp-v0.1.0/macos-aarch64.tar.gz"
+            "atfile-lsp-v0.1.0/macos-aarch64"
+        );
+        assert_eq!(
+            platform.binary_path(),
+            "atfile-lsp-v0.1.0/macos-aarch64/atfile-lsp"
         );
     }
 
