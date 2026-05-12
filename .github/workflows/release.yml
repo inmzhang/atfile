@@ -27,11 +27,6 @@ jobs:
             asset_platform: linux-aarch64
             archive: tar.gz
             binary: atfile-lsp
-          - runner: macos-13
-            target: x86_64-apple-darwin
-            asset_platform: macos-x86_64
-            archive: tar.gz
-            binary: atfile-lsp
           - runner: macos-latest
             target: aarch64-apple-darwin
             asset_platform: macos-aarch64
