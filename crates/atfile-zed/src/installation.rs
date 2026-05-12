@@ -260,10 +260,7 @@ mod tests {
             platform.asset_name(),
             "atfile-lsp-v0.1.0-macos-aarch64.tar.gz"
         );
-        assert_eq!(
-            platform.archive_path(),
-            "atfile-lsp-v0.1.0/macos-aarch64"
-        );
+        assert_eq!(platform.archive_path(), "atfile-lsp-v0.1.0/macos-aarch64");
         assert_eq!(
             platform.binary_path(),
             "atfile-lsp-v0.1.0/macos-aarch64/atfile-lsp"
