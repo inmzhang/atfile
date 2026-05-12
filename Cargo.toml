@@ -1,12 +1,27 @@
+[package]
+name = "atfile-zed"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/inmzhang/atfile"
+publish = false
+
+[lib]
+path = "crates/atfile-zed/src/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+zed_extension_api.workspace = true
+
 [workspace]
-members = ["crates/atfile-lsp", "crates/atfile-zed"]
+members = ["crates/atfile-lsp"]
 resolver = "2"
 
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
 license = "MIT"
-repository = "https://github.com/inm/atfile"
+repository = "https://github.com/inmzhang/atfile"
 publish = false
 
 [workspace.dependencies]
